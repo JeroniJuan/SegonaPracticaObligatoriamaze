@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ca">
+<html lang="ca" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" href="/css/login.css">
     <meta charset="UTF-8">
@@ -9,12 +9,13 @@
 <body>
     <h1>Login</h1>
 	<form method="post">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name"><br>
+        <label for="username">Name</label>
+        <input type="text" id="username" name="username"><br>
         <label for="password">Password</label>
         <input type="password" id="password" name="password"><br>
         <input type="submit" value="Envia">
         <p>No tens usuari? <a href="/register">Crea un compte.</a></p>
+        <p th:text="${loginStatus}"></p>
 	</form>
 </body>
 </html>

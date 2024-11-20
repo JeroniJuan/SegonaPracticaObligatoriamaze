@@ -1,41 +1,44 @@
 body {
-    background-image: url('/img/registerBackground.png');
+    background-image: url('/img/startBackground.png');
     background-size: cover;
     background-position: center;
-    color: #393e46;
+    color: #e4e7ec;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
     margin: 0;
+    justify-content: center;
+    background-attachment: fixed;
 }
 
 h1 {
-    color: #e4e7ec;
+    color: #393e46;
     margin-top: 40px;
-    font-size: 2em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 3em;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 }
 
 form {
-    background-color: rgba(40, 40, 60, 0.9);
-    padding: 20px;
+    background-color: rgba(40, 40, 60, 0.8);
+    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.6);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
     width: 300px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin-top: 20px;
 }
 
 label {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     color: #b0bcc8;
+    font-size: 1.2em;
 }
 
-input[type="text"],
-input[type="password"] {
+select {
     background-color: #2d3340;
     color: #cfd3db;
     border: 1px solid #666c7a;
@@ -43,10 +46,11 @@ input[type="password"] {
     padding: 10px;
     margin-bottom: 15px;
     outline: none;
+    width: 100%;
+    font-size: 1em;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
+select:focus {
     border-color: #8893a6;
     background-color: #353a48;
 }
@@ -56,10 +60,13 @@ input[type="submit"] {
     color: #e4e7ec;
     border: none;
     border-radius: 4px;
-    padding: 10px;
+    padding: 10px 15px;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    width: 100%;
+    font-size: 1.1em;
+    margin-top: 15px;
 }
 
 input[type="submit"]:hover {
@@ -82,6 +89,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.registerMessage{
+.registerMessage {
     color: white;
 }
