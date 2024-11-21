@@ -23,6 +23,7 @@ public class GameDaoImplement implements GameDao{
 
     @Override
     public Room getRoom(int roomid) {
+        if (roomid == -1) return null;
         return jdbcTemplate.queryForObject("select * from room where id=?",
                 new BeanPropertyRowMapper<>(Room.class)
                 ,roomid

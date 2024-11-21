@@ -118,10 +118,37 @@ function drawWallWithClosedDoor(x1, y1, x2, y2, doorSize = 50) {
 function drawRoom() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawWallNorthNormal();
-    drawWallSouthOpen();
-    drawWallEastClosed();
-    drawWallWestNormal();
+    const north = getDoorInfo('north');
+    const south = getDoorInfo('south');
+    const east = getDoorInfo('east');
+    const west = getDoorInfo('west');
+
+    drawWallBasedOnDoor(north, drawWallNorthNormal, drawWallNorthOpen, drawWallNorthClosed);
+    drawWallBasedOnDoor(south, drawWallSouthNormal, drawWallSouthOpen, drawWallSouthClosed);
+    drawWallBasedOnDoor(east, drawWallEastNormal, drawWallEastOpen, drawWallEastClosed);
+    drawWallBasedOnDoor(west, drawWallWestNormal, drawWallWestOpen, drawWallWestClosed);
+}
+
+function getDoorInfo(direction) {
+    const doorElement = document.getElementById(direction);
+    if (!doorElement || !doorElement.value) {
+        return null;
+    }
+
+    return {
+        id: parseInt(doorElement.value, 10),
+        open: doorElement.dataset.open === 'true'
+    };
+}
+
+function drawWallBasedOnDoor(door, drawNormal, drawOpen, drawClosed) {
+    if (!door) {
+        drawNormal();
+    } else if (door.open) {
+        drawOpen();
+    } else {
+        drawClosed();
+    }
 }
 
 drawRoom();

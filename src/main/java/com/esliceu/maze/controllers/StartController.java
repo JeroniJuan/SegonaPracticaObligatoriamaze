@@ -20,9 +20,9 @@ public class StartController {
     }
 
     @PostMapping("/start")
-    public String postStart(@RequestParam String mapid, Model model, HttpSession session) {
+    public String postStart(@RequestParam String mapid, HttpSession session) {
+        System.out.println("Mapid selected: " + mapid);
         if (mapid.equals("1") || mapid.equals("2")) {
-            model.addAttribute("mapid", mapid);
             session.setAttribute("mapid", mapid);
             return "redirect:/map";
         }
