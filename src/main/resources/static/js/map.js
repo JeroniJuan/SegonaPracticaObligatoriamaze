@@ -115,7 +115,82 @@ function drawWallWithClosedDoor(x1, y1, x2, y2, doorSize = 50) {
     ctx.stroke();
 }
 
+function drawCoin() {
+    const coinRadius = 15;
+    const coinX = margin + roomSize / 4; // Posición fija en el primer cuarto de la sala
+    const coinY = margin + roomSize / 4;
+
+    ctx.fillStyle = "gold";
+    ctx.beginPath();
+    ctx.arc(coinX, coinY, coinRadius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    canvas.addEventListener('click', function handleClick(event) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        if (Math.sqrt((mouseX - coinX) ** 2 + (mouseY - coinY) ** 2) <= coinRadius) {
+            console.log("Moneda clickeada");
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/getCoin';
+
+            document.body.appendChild(form);
+            form.submit();
+
+            canvas.removeEventListener('click', handleClick);
+        }
+    });
+}
+
+
+function drawKey() {
+    const keyWidth = 10;
+    const keyHeight = 30;
+
+    const keyX = margin + (3 * roomSize) / 4;
+    const keyY = margin + (3 * roomSize) / 4;
+
+    ctx.fillStyle = "silver";
+    ctx.beginPath();
+    ctx.rect(keyX, keyY, keyWidth, keyHeight);
+    ctx.fill();
+
+    canvas.addEventListener('click', function handleClick(event) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        if (
+            mouseX >= keyX &&
+            mouseX <= keyX + keyWidth &&
+            mouseY >= keyY &&
+            mouseY <= keyY + keyHeight
+        ) {
+            console.log("Llave clickeada");
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/getKey';
+
+            document.body.appendChild(form);
+            form.submit();
+
+            canvas.removeEventListener('click', handleClick);
+        }
+    });
+}
+
+
+
 function drawRoom() {
+    const coinElement = document.getElementById('coin');
+    const keyElement = document.getElementById('key');
+    const coin = coinElement && coinElement.value === 'true';
+    const key = keyElement && keyElement.value;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const north = getDoorInfo('north');
@@ -127,7 +202,16 @@ function drawRoom() {
     drawWallBasedOnDoor(south, drawWallSouthNormal, drawWallSouthOpen, drawWallSouthClosed);
     drawWallBasedOnDoor(east, drawWallEastNormal, drawWallEastOpen, drawWallEastClosed);
     drawWallBasedOnDoor(west, drawWallWestNormal, drawWallWestOpen, drawWallWestClosed);
+
+    if (coin) {
+        drawCoin();
+    }
+
+    if (key && key !== "") {
+        drawKey();
+    }
 }
+
 
 function getDoorInfo(direction) {
     const doorElement = document.getElementById(direction);

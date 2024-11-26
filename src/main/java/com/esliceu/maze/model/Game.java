@@ -6,6 +6,7 @@ public class Game {
     String coinsGrabbed; // Llista de les habitacions que tenian moneda que
                                                     // s'han agafat.
     String keys;  // Llista del nom de les claus que s'han agafat
+    String openedDoors;
 
     public int getCurrentRoomID() {
         return currentRoomID;
@@ -37,5 +38,17 @@ public class Game {
 
     public void setKeys(String keys) {
         this.keys = keys;
+    }
+
+    public String getOpenedDoors() {
+        return openedDoors;
+    }
+
+    public void setOpenedDoors(String openedDoors) {
+        this.openedDoors = openedDoors;
+    }
+
+    public void sumCoin() {
+        coinAmount++;
     }
 }

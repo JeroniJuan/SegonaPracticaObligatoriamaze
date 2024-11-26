@@ -24,17 +24,32 @@ public class MapController {
             session.setAttribute("currentGame", currentGame);
         }
 
-
         int currentRoomId = currentGame.getCurrentRoomID();
+        System.out.println("-----------------------------------------------");
         System.out.println("Current Room ID:" + currentRoomId);
-        System.out.println("Current Game:" + currentGame.getCurrentRoomID() + " " + currentGame.getCoinAmount());
-
+        System.out.println("Current Game:" + gameService.getRoom(currentGame.getCurrentRoomID()).getRoomName());
+        System.out.println("Coin Amount:" + currentGame.getCoinAmount());
+        System.out.println("Coins Grabbed:" + currentGame.getCoinsGrabbed());
+        System.out.println("Keys:" + currentGame.getKeys());
+        System.out.println("-----------------------------------------------");
         model.addAttribute("mapid", currentMap.getId());
         model.addAttribute("currentRoom", currentGame.getCurrentRoomID());
         model.addAttribute("north", gameService.getDoor(gameService.getRoom(currentRoomId).getNorth()));
         model.addAttribute("east", gameService.getDoor(gameService.getRoom(currentRoomId).getEast()));
         model.addAttribute("south", gameService.getDoor(gameService.getRoom(currentRoomId).getSouth()));
         model.addAttribute("west", gameService.getDoor(gameService.getRoom(currentRoomId).getWest()));
+        if (gameService.canGrabKey(currentGame)){
+            model.addAttribute("key", gameService.getRoom(currentGame.getCurrentRoomID()).getRoomKey());
+        }else {
+            model.addAttribute("key", null);
+        }
+        if (gameService.canGrabCoin(currentGame)){
+            model.addAttribute("coin", gameService.getRoom(currentGame.getCurrentRoomID()).hasCoin());
+        }else{
+            model.addAttribute("coin", false);
+        }
+
+
 
         return "map";
     }

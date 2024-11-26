@@ -6,6 +6,7 @@ import com.esliceu.maze.services.GameService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,37 +17,54 @@ public class NavController {
     private GameService gameService;
 
     @PostMapping("/nav")
-    public String getNav(@RequestParam String direction, HttpSession session) {
+    public String postNav(@RequestParam String direction, HttpSession session, Model model) {
         Game currentGame = (Game) session.getAttribute("currentGame");
 
-        if (currentGame != null) {
-            int currentRoomId = currentGame.getCurrentRoomID();
-
-            int newRoomId = -1;
-            Door door;
-            switch (direction) {
-                case "N":
-                    door = gameService.getDoor(gameService.getRoom(currentRoomId).getNorth());
-                    newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
-                    break;
-                case "S":
-                    door = gameService.getDoor(gameService.getRoom(currentRoomId).getSouth());
-                    newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
-                    break;
-                case "E":
-                    door = gameService.getDoor(gameService.getRoom(currentRoomId).getEast());
-                    newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
-                    break;
-                case "W":
-                    door = gameService.getDoor(gameService.getRoom(currentRoomId).getWest());
-                    newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
-                    break;
-            }
-
-            if (newRoomId != -1) {
-                currentGame.setCurrentRoomID(newRoomId);
-            }
+        if (currentGame == null) {
+            return "redirect:/start";
         }
+
+        int currentRoomId = currentGame.getCurrentRoomID();
+        boolean canPass = true;
+        int newRoomId = -1;
+        Door door = new Door();
+
+        switch (direction) {
+            case "N":
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getNorth());
+                if (door == null) break;
+                if (!door.isOpen()) {
+                    canPass = false;
+                }
+                break;
+            case "S":
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getSouth());
+                if (door == null) break;
+                if (!door.isOpen()) {
+                    canPass = false;
+                }
+                break;
+            case "E":
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getEast());
+                if (door == null) break;
+                if (!door.isOpen()) {
+                    canPass = false;
+                }
+                break;
+            case "W":
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getWest());
+                if (door == null) break;
+                if (!door.isOpen()) {
+                    canPass = false;
+                }
+                break;
+        }
+        if (canPass && door != null) newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
+        if (newRoomId != -1) {
+            model.addAttribute("mapMessage", "");
+            currentGame.setCurrentRoomID(newRoomId);
+        }
+
 
         session.setAttribute("currentGame", currentGame);
         return "redirect:/map";

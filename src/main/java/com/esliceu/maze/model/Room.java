@@ -67,7 +67,7 @@ public class Room {
         this.roomKey = roomKey;
     }
 
-    public boolean isCoin() {
+    public boolean hasCoin() {
         return coin;
     }
 
