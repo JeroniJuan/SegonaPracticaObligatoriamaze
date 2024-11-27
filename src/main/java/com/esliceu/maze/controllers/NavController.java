@@ -31,28 +31,28 @@ public class NavController {
 
         switch (direction) {
             case "N":
-                door = gameService.getDoor(gameService.getRoom(currentRoomId).getNorth());
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getNorth(), currentGame);
                 if (door == null) break;
                 if (!door.isOpen()) {
                     canPass = false;
                 }
                 break;
             case "S":
-                door = gameService.getDoor(gameService.getRoom(currentRoomId).getSouth());
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getSouth(), currentGame);
                 if (door == null) break;
                 if (!door.isOpen()) {
                     canPass = false;
                 }
                 break;
             case "E":
-                door = gameService.getDoor(gameService.getRoom(currentRoomId).getEast());
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getEast(), currentGame);
                 if (door == null) break;
                 if (!door.isOpen()) {
                     canPass = false;
                 }
                 break;
             case "W":
-                door = gameService.getDoor(gameService.getRoom(currentRoomId).getWest());
+                door = gameService.getDoor(gameService.getRoom(currentRoomId).getWest(), currentGame);
                 if (door == null) break;
                 if (!door.isOpen()) {
                     canPass = false;
@@ -61,11 +61,13 @@ public class NavController {
         }
         if (canPass && door != null) newRoomId = gameService.getOtherSideRoomID(door, currentRoomId);
         if (newRoomId != -1) {
-            model.addAttribute("mapMessage", "");
+            session.setAttribute("mapMessage", "");
             currentGame.setCurrentRoomID(newRoomId);
+        }else{
+            session.setAttribute("mapMessage", "No pots avançar aqui.");
         }
 
-
+        currentGame.sumMovesAmount();
         session.setAttribute("currentGame", currentGame);
         return "redirect:/map";
     }

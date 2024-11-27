@@ -1,4 +1,5 @@
 const canvas = document.getElementById('roomCanvas');
+const roomid = document.getElementById('roomid');
 const ctx = canvas.getContext('2d');
 const thickness = 8;
 const margin = 50;
@@ -37,19 +38,19 @@ function drawWallWestOpen() {
 }
 
 function drawWallNorthClosed() {
-    drawWallWithClosedDoor(margin, margin, margin + roomSize, margin);
+    drawWallWithClosedDoor(margin, margin, margin + roomSize, margin, "n");
 }
 
 function drawWallSouthClosed() {
-    drawWallWithClosedDoor(margin, margin + roomSize, margin + roomSize, margin + roomSize);
+    drawWallWithClosedDoor(margin, margin + roomSize, margin + roomSize, margin + roomSize, "s");
 }
 
 function drawWallEastClosed() {
-    drawWallWithClosedDoor(margin + roomSize, margin, margin + roomSize, margin + roomSize);
+    drawWallWithClosedDoor(margin + roomSize, margin, margin + roomSize, margin + roomSize, "e");
 }
 
 function drawWallWestClosed() {
-    drawWallWithClosedDoor(margin, margin, margin, margin + roomSize);
+    drawWallWithClosedDoor(margin, margin, margin, margin + roomSize, "w");
 }
 
 function drawWallNormal(x1, y1, x2, y2) {
@@ -85,7 +86,7 @@ function drawWallWithDoor(x1, y1, x2, y2, doorSize = 50) {
     ctx.stroke();
 }
 
-function drawWallWithClosedDoor(x1, y1, x2, y2, doorSize = 50) {
+function drawWallWithClosedDoor(x1, y1, x2, y2, dir, doorSize = 50) {
     const totalLength = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     const startLength = (totalLength - doorSize) / 2;
 
@@ -96,8 +97,8 @@ function drawWallWithClosedDoor(x1, y1, x2, y2, doorSize = 50) {
     const part2Y = y2 - ((y2 - y1) * startLength) / totalLength;
 
     ctx.lineWidth = thickness;
-
     ctx.strokeStyle = "black";
+
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(part1X, part1Y);
@@ -113,11 +114,44 @@ function drawWallWithClosedDoor(x1, y1, x2, y2, doorSize = 50) {
     ctx.moveTo(part1X, part1Y);
     ctx.lineTo(part2X, part2Y);
     ctx.stroke();
+
+    const clickMargin = 10;
+
+    canvas.addEventListener('click', function handleClick(event) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const clickOnDoor =
+            mouseX >= Math.min(part1X, part2X) - clickMargin &&
+            mouseX <= Math.max(part1X, part2X) + clickMargin &&
+            mouseY >= Math.min(part1Y, part2Y) - clickMargin &&
+            mouseY <= Math.max(part1Y, part2Y) + clickMargin;
+
+        if (clickOnDoor) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/open';
+
+            const dirInput = document.createElement('input');
+            dirInput.type = 'hidden';
+            dirInput.name = 'dir';
+            dirInput.value = dir;
+
+            form.appendChild(dirInput);
+            document.body.appendChild(form);
+            form.submit();
+
+            canvas.removeEventListener('click', handleClick);
+        }
+    });
 }
+
+
 
 function drawCoin() {
     const coinRadius = 15;
-    const coinX = margin + roomSize / 4; // Posición fija en el primer cuarto de la sala
+    const coinX = margin + roomSize / 4;
     const coinY = margin + roomSize / 4;
 
     ctx.fillStyle = "gold";
@@ -186,6 +220,27 @@ function drawKey() {
 
 
 function drawRoom() {
+        if (roomid && roomid.value == 7) {
+            const playerName = prompt("Por favor, introduce tu nombre de jugador:");
+
+            if (playerName) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/endForm';
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'hidden';
+                nameInput.name = 'name';
+                nameInput.value = playerName;
+
+                form.appendChild(nameInput);
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                alert("Debes ingresar un nombre para continuar.");
+            }
+            return;
+        }
     const coinElement = document.getElementById('coin');
     const keyElement = document.getElementById('key');
     const coin = coinElement && coinElement.value === 'true';

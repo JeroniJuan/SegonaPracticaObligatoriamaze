@@ -12,7 +12,12 @@
     <h1>Jugant mapa: <span th:text="${mapid}"></span></h1>
     <h4 th:text="${gameMessage}"></h4>
 </div>
-
+<div>
+    <p>Habitació actual: <span th:text="${currentRoomName}"></span></p>
+    <p>Numero monedes: <span th:text="${coinAmount}"></span></p>
+    <p>Claus que tens: <span th:text="${keysGrabbed}"></span></p>
+    <a href="/reset">Reiniciar partida.</a>
+</div>
 
 <div style="display: flex; align-items: center;">
     <canvas id="roomCanvas" width="450" height="450"></canvas>
@@ -40,7 +45,7 @@
 </div>
 
 
-<input type="hidden" id="roomid" name="roomid" th:value="${currentRoomID}">
+<input type="hidden" id="roomid" name="roomid" th:value="${currentRoom}">
 <input type="hidden" id="north" name="north" th:value="${north}" th:data-open="${north?.open}">
 <input type="hidden" id="east" name="east" th:value="${east}" th:data-open="${east?.open}">
 <input type="hidden" id="west" name="west" th:value="${west}" th:data-open="${west?.open}">

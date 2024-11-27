@@ -1,12 +1,23 @@
 package com.esliceu.maze.model;
 
 public class Game {
+    int id;
+    int userID;
+    String gameName;
     int currentRoomID;
     int coinAmount = 0;
-    String coinsGrabbed; // Llista de les habitacions que tenian moneda que
-                                                    // s'han agafat.
-    String keys;  // Llista del nom de les claus que s'han agafat
-    String openedDoors;
+    String coinsGrabbed; // Llista de les habitacions que tenian moneda que s'han agafat.
+    String keysGrabbed;  // Llista del nom de les claus que s'han agafat.
+    String openedDoors; // Llista de portes obertes.
+    int movesAmount = 0;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getCurrentRoomID() {
         return currentRoomID;
@@ -32,12 +43,12 @@ public class Game {
         this.coinsGrabbed = coinsGrabbed;
     }
 
-    public String getKeys() {
-        return keys;
+    public String getKeysGrabbed() {
+        return keysGrabbed;
     }
 
-    public void setKeys(String keys) {
-        this.keys = keys;
+    public void setKeysGrabbed(String keysGrabbed) {
+        this.keysGrabbed = keysGrabbed;
     }
 
     public String getOpenedDoors() {
@@ -48,7 +59,35 @@ public class Game {
         this.openedDoors = openedDoors;
     }
 
+    public int getMovesAmount() {
+        return movesAmount;
+    }
+
+    public void setMovesAmount(int movesAmount) {
+        this.movesAmount = movesAmount;
+    }
+
+    public void sumMovesAmount(){
+        movesAmount++;
+    }
+
     public void sumCoin() {
         coinAmount++;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 }

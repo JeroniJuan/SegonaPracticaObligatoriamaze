@@ -23,24 +23,23 @@ public class OpenController {
     @PostMapping("/open")
     public String postOpen(@RequestParam String dir, HttpSession session) {
         Game currentGame = (Game) session.getAttribute("currentGame");
+        System.out.println("Direcció porta a obrir: " + dir);
 
         if (currentGame == null) {
             return "redirect:/start";
         }
 
-        // Obtén la sala actual
         int currentRoomID = currentGame.getCurrentRoomID();
         Door door = null;
 
-        // Determinar la puerta de acuerdo a la dirección
         if (dir.equals("n")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getNorth());
+            door = gameService.getDoor(gameService.getRoom(currentRoomID).getNorth(), currentGame);
         } else if (dir.equals("e")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getEast());
+            door = gameService.getDoor(gameService.getRoom(currentRoomID).getEast(), currentGame);
         } else if (dir.equals("s")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getSouth());
+            door = gameService.getDoor(gameService.getRoom(currentRoomID).getSouth(), currentGame);
         } else if (dir.equals("w")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getWest());
+            door = gameService.getDoor(gameService.getRoom(currentRoomID).getWest(), currentGame);
         }
 
         if (door == null) {
@@ -61,6 +60,8 @@ public class OpenController {
             currentGame.setOpenedDoors(new Gson().toJson(openedDoorsSet));
 
             session.setAttribute("currentGame", currentGame);
+        }else{
+            session.setAttribute("mapMessage", "No tens la clau necessaria. La clau necesaria es: " + door.getDoorKey());
         }
 
         return "redirect:/map";
