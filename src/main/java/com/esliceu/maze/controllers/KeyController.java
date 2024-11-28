@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,13 +19,14 @@ public class KeyController {
     GameService gameService;
 
     @PostMapping("/getKey")
-    public String postKey(HttpSession session) {
-        Game currentGame = (Game) session.getAttribute("currentGame");
-
+    public String postKey(HttpSession session, @RequestParam String timePassed) {
+        int gameID = (int) session.getAttribute("gameID");
+        Game currentGame = gameService.getGame(gameID);
         if (currentGame == null) {
             return "redirect:/start";
         }
 
+        currentGame.setTimePassed(Integer.parseInt(timePassed));
         int currentRoomID = currentGame.getCurrentRoomID();
         Room currentRoom = gameService.getRoom(currentRoomID);
 
@@ -54,7 +56,7 @@ public class KeyController {
             }
         }
 
-        session.setAttribute("currentGame", currentGame);
+        gameService.updateGame(currentGame);
         return "redirect:/map";
     }
 }

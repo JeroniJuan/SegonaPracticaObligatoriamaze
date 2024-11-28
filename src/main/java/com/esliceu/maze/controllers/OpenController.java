@@ -21,26 +21,20 @@ public class OpenController {
     private GameService gameService;
 
     @PostMapping("/open")
-    public String postOpen(@RequestParam String dir, HttpSession session) {
-        Game currentGame = (Game) session.getAttribute("currentGame");
+    public String postOpen(@RequestParam String dir, @RequestParam String timePassed,HttpSession session) {
+        int gameID = (int) session.getAttribute("gameID");
+        Game currentGame = gameService.getGame(gameID);
+
         System.out.println("Direcció porta a obrir: " + dir);
 
         if (currentGame == null) {
             return "redirect:/start";
         }
-
+        currentGame.setTimePassed(Integer.parseInt(timePassed));
         int currentRoomID = currentGame.getCurrentRoomID();
         Door door = null;
 
-        if (dir.equals("n")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getNorth(), currentGame);
-        } else if (dir.equals("e")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getEast(), currentGame);
-        } else if (dir.equals("s")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getSouth(), currentGame);
-        } else if (dir.equals("w")) {
-            door = gameService.getDoor(gameService.getRoom(currentRoomID).getWest(), currentGame);
-        }
+        door = gameService.getDoorFromDirection(dir, door, currentRoomID, currentGame);
 
         if (door == null) {
             return "redirect:/map";
@@ -59,11 +53,12 @@ public class OpenController {
             openedDoorsSet.add(String.valueOf(door.getId()));
             currentGame.setOpenedDoors(new Gson().toJson(openedDoorsSet));
 
-            session.setAttribute("currentGame", currentGame);
+            gameService.updateGame(currentGame);
         }else{
             session.setAttribute("mapMessage", "No tens la clau necessaria. La clau necesaria es: " + door.getDoorKey());
         }
 
         return "redirect:/map";
     }
+
 }

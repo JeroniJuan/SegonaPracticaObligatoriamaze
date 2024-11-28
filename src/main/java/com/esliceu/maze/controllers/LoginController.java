@@ -1,7 +1,6 @@
 package com.esliceu.maze.controllers;
 
-import com.esliceu.maze.model.User;
-import com.esliceu.maze.services.LoginService;
+import com.esliceu.maze.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
     @Autowired
-    LoginService loginService;
+    UserService loginService;
 
     @GetMapping("/login")
     public String getLogin() {

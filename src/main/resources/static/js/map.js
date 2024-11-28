@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 const thickness = 8;
 const margin = 50;
 const roomSize = canvas.width - margin * 2;
+const timePassedInput = document.getElementById('timePassed');
 
 function drawWallNorthNormal() {
     drawWallNormal(margin, margin, margin + roomSize, margin);
@@ -138,6 +139,12 @@ function drawWallWithClosedDoor(x1, y1, x2, y2, dir, doorSize = 50) {
             dirInput.name = 'dir';
             dirInput.value = dir;
 
+            const timePassedInput = document.createElement('input');
+            timePassedInput.type = 'hidden';
+            timePassedInput.name = 'timePassed';
+            timePassedInput.value = document.getElementById('timePassed').value;
+
+            form.appendChild(timePassedInput);
             form.appendChild(dirInput);
             document.body.appendChild(form);
             form.submit();
@@ -171,6 +178,12 @@ function drawCoin() {
             form.method = 'POST';
             form.action = '/getCoin';
 
+            const timePassedInput = document.createElement('input');
+            timePassedInput.type = 'hidden';
+            timePassedInput.name = 'timePassed';
+            timePassedInput.value = document.getElementById('timePassed').value;
+
+            form.appendChild(timePassedInput);
             document.body.appendChild(form);
             form.submit();
 
@@ -209,6 +222,12 @@ function drawKey() {
             form.method = 'POST';
             form.action = '/getKey';
 
+            const timePassedInput = document.createElement('input');
+            timePassedInput.type = 'hidden';
+            timePassedInput.name = 'timePassed';
+            timePassedInput.value = document.getElementById('timePassed').value;
+
+            form.appendChild(timePassedInput);
             document.body.appendChild(form);
             form.submit();
 
@@ -230,9 +249,15 @@ function drawRoom() {
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'hidden';
-                nameInput.name = 'name';
+                nameInput.name = 'playerName';
                 nameInput.value = playerName;
 
+                const timePassedInput = document.createElement('input');
+                timePassedInput.type = 'hidden';
+                timePassedInput.name = 'timePassed';
+                timePassedInput.value = document.getElementById('timePassed').value;
+
+                form.appendChild(timePassedInput);
                 form.appendChild(nameInput);
                 document.body.appendChild(form);
                 form.submit();
@@ -290,4 +315,21 @@ function drawWallBasedOnDoor(door, drawNormal, drawOpen, drawClosed) {
     }
 }
 
+function updateTimePassed(form) {
+    const timePassedInput = document.getElementById('timePassed');
+    const timePassedField = form.querySelector('input[name="timePassed"]');
+    timePassedField.value = timePassedInput.value;
+}
+
+
+function startTimer(){
+    if (!timePassedInput.value) {
+        timePassedInput.value = 0;
+    }
+
+    setInterval(() => {
+        timePassedInput.value = parseInt(timePassedInput.value, 10) + 1;
+    }, 1000);
+}
 drawRoom();
+startTimer();

@@ -4,16 +4,14 @@ import com.esliceu.maze.dao.GameDao;
 import com.esliceu.maze.dao.GameDaoImplement;
 import com.esliceu.maze.dao.UserDao;
 import com.esliceu.maze.dao.UserDaoImplement;
-import com.esliceu.maze.model.Door;
-import com.esliceu.maze.model.Game;
-import com.esliceu.maze.model.GameMap;
-import com.esliceu.maze.model.Room;
+import com.esliceu.maze.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -22,7 +20,7 @@ public class GameService {
     GameDao gameDao = new GameDaoImplement();
 
     @Autowired
-    UserDao userdao = new UserDaoImplement();
+    UserService userService = new UserService();
 
     public GameMap getMap(int mapid) {
         return gameDao.getMap(mapid);
@@ -53,26 +51,20 @@ public class GameService {
     }
 
 
-    public Game startGame(GameMap map, String user) {
+    public Game startGame(GameMap map, String user, String gameName) {
         Game game = new Game();
+        game.setGameName(gameName);
         game.setCurrentRoomID(map.getId());
+        game.setMapID(map.getId());
         game.setCoinAmount(0);
         game.setMovesAmount(0);
-        game.setUserID(userdao.findByUsername(user).getId());
-        return game;
-    }
-
-    public Game moveRoom(Game game, String dir) {
-        if (dir.equals("n")) {
-            game.setCurrentRoomID(getRoom(game.getCurrentRoomID()).getNorth());
-        } else if (dir.equals("e")) {
-            game.setCurrentRoomID(getRoom(game.getCurrentRoomID()).getEast());
-        } else if (dir.equals("w")) {
-            game.setCurrentRoomID(getRoom(game.getCurrentRoomID()).getWest());
-        } else if (dir.equals("s")) {
-            game.setCurrentRoomID(getRoom(game.getCurrentRoomID()).getSouth());
-        }
-        return game;
+        game.setTimePassed(0);
+        game.setUserID(userService.findByUsername(user).getId());
+        game.setCoinsGrabbed("");
+        game.setKeysGrabbed("");
+        game.setOpenedDoors("");
+        gameDao.insertGame(game);
+        return gameDao.getLatestGame();
     }
 
     public int getOtherSideRoomID(Door door, int currentRoomID) {
@@ -83,6 +75,19 @@ public class GameService {
         } else {
             return side1;
         }
+    }
+
+    public Door getDoorFromDirection(String dir, Door door, int currentRoomID, Game currentGame) {
+        if (dir.equals("n")) {
+            door = getDoor(getRoom(currentRoomID).getNorth(), currentGame);
+        } else if (dir.equals("e")) {
+            door = getDoor(getRoom(currentRoomID).getEast(), currentGame);
+        } else if (dir.equals("s")) {
+            door = getDoor(getRoom(currentRoomID).getSouth(), currentGame);
+        } else if (dir.equals("w")) {
+            door = getDoor(getRoom(currentRoomID).getWest(), currentGame);
+        }
+        return door;
     }
 
     public boolean checkKeys(Door door, Game currentGame) {
@@ -148,7 +153,18 @@ public class GameService {
         return false;
     }
 
-    public void endGame(Game currentGame) {
-
+    public Game getGame(int id){
+        return gameDao.getGame(id);
     }
+
+
+    public void updateGame(Game currentGame) {
+        gameDao.updateGame(currentGame);
+    }
+
+    public List<Game> getGamesByUserId(int userid) {
+        return gameDao.getGamesByUserId(userid);
+    }
+
+
 }

@@ -1,20 +1,56 @@
 <!doctype html>
-<html lang="ca">
+<html lang="ca" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" href="/css/start.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/js/start.js" defer></script>
     <title>Start</title>
 </head>
 <body>
-    <h1>Start</h1>
-    <form method="post">
-        <label for="mapid">Eligeix quin mapa vols jugar</label>
-        <select id="mapid" name="mapid">
-            <option value="1">Mapa 1</option>
-            <option value="2">Mapa 2</option>
-        </select>
-        <input type="submit" value="Entra">
-    </form>
+<h1>Start</h1>
+<div class="container">
+    <div class="form-section">
+        <form method="post">
+            <label for="mapid">Eligeix quin mapa vols jugar</label>
+            <select id="mapid" name="mapid">
+                <option value="1">Mapa 1</option>
+                <option value="2">Mapa 2</option>
+            </select>
+            <label for="gameName">Inserta el nom de la partida.</label>
+            <input type="text" id="gameName" name="gameName" value="">
+            <input type="submit" value="Entra">
+            <p><a href="/logout">Logout</a></p>
+            <p>Ves a els scores: <a href="/scores">Scores</a></p>
+        </form>
+    </div>
+
+    <div class="games-section">
+        <div th:if="${not #lists.isEmpty(games)}">
+            <h2>Els teus jocs:</h2>
+            <div class="games-list">
+                <ul>
+                    <li th:each="game : ${games}">
+                        <div class="game-item">
+                            <p><strong>Nom del joc:</strong> <span th:text="${game.gameName}"></span></p>
+                            <p><strong>ID del joc:</strong> <span th:text="${game.id}"></span></p>
+                            <p><strong>Habitació actual:</strong> <span th:text="${game.currentRoomID}"></span></p>
+                            <p><strong>Monedes:</strong> <span th:text="${game.coinAmount}"></span></p>
+                            <p><strong>Temps jugat:</strong> <span th:text="${game.timePassed}"></span> segons</p>
+                            <form action="/map" method="get">
+                                <input type="hidden" name="gameId" th:value="${game.id}">
+                                <button type="submit">Continuar Partida</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(games)}">
+            <p>No tens jocs per mostrar.</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

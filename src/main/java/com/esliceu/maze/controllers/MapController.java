@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MapController {
@@ -16,17 +17,30 @@ public class MapController {
     private GameService gameService;
 
     @GetMapping("/map")
-    public String getMap(Model model, HttpSession session) {
-        Game currentGame = (Game) session.getAttribute("currentGame");
-        GameMap currentMap = gameService.getMap(Integer.parseInt((String) session.getAttribute("mapid")));
-        if (currentGame == null) {
-            currentGame = gameService.startGame(currentMap, (String) session.getAttribute("user"));
-            session.setAttribute("currentGame", currentGame);
+    public String getMap(Model model, HttpSession session, @RequestParam(required = false) String gameIDStr) {
+        Game currentGame;
+        GameMap currentMap = new GameMap();
+        int gameID = (session.getAttribute("gameID") != null) ? (int) session.getAttribute("gameID") : -1;
+        if (gameIDStr != null){
+            gameID = Integer.parseInt(gameIDStr);
         }
-
+        String mapid = (String) session.getAttribute("mapid");
+        if (mapid != null){
+            currentMap = gameService.getMap(Integer.parseInt(mapid));
+        }
+        if (gameID == -1){
+            String gameName = (String) session.getAttribute("gameName");
+            session.setAttribute("gameName", null);
+            currentGame = gameService.startGame(currentMap, (String) session.getAttribute("user"), gameName);
+            session.setAttribute("gameID", currentGame.getId());
+            System.out.println("CurrentGameID en map: " + currentGame.getId());
+        }else {
+            currentGame = gameService.getGame(gameID);
+        }
 
         int currentRoomId = currentGame.getCurrentRoomID();
 
+        // Info de la partida actual.
         System.out.println("-----------------------------------------------");
         System.out.println("Current Room ID:" + currentRoomId);
         System.out.println("Current Game:" + gameService.getRoom(currentRoomId).getRoomName());
@@ -41,6 +55,7 @@ public class MapController {
         model.addAttribute("currentRoom", currentRoomId);
         model.addAttribute("gameMessage" , session.getAttribute("mapMessage"));
         model.addAttribute("currentRoomName", gameService.getRoom(currentRoomId).getRoomName());
+        model.addAttribute("timePassed", currentGame.getTimePassed());
         model.addAttribute("coinAmount", currentGame.getCoinAmount());
         model.addAttribute("keys", currentGame.getKeysGrabbed());
         model.addAttribute("north", gameService.getDoor(gameService.getRoom(currentRoomId).getNorth(), currentGame));
@@ -57,8 +72,6 @@ public class MapController {
         }else{
             model.addAttribute("coin", false);
         }
-
-
 
         return "map";
     }

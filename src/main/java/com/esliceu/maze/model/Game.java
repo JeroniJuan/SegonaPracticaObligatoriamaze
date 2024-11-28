@@ -1,8 +1,11 @@
 package com.esliceu.maze.model;
 
+import com.esliceu.maze.services.GameService;
+
 public class Game {
     int id;
     int userID;
+    int mapID;
     String gameName;
     int currentRoomID;
     int coinAmount = 0;
@@ -10,6 +13,25 @@ public class Game {
     String keysGrabbed;  // Llista del nom de les claus que s'han agafat.
     String openedDoors; // Llista de portes obertes.
     int movesAmount = 0;
+    int timePassed = 0; // Temps que ha passat en la partida en segons.
+
+    public void resetGame(GameMap map) {
+        this.currentRoomID = map.startRoomID;
+        coinAmount = 0;
+        coinsGrabbed = null;
+        keysGrabbed = null;
+        openedDoors = null;
+        movesAmount = 0;
+        timePassed = 0;
+    }
+
+    public int getMapID() {
+        return mapID;
+    }
+
+    public void setMapID(int mapID) {
+        this.mapID = mapID;
+    }
 
     public int getId() {
         return id;
@@ -90,4 +112,14 @@ public class Game {
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
+
+    public int getTimePassed() {
+        return timePassed;
+    }
+
+    public void setTimePassed(int timePassed){
+        this.timePassed = timePassed;
+    }
+
+
 }

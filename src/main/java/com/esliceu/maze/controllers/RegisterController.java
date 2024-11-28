@@ -1,8 +1,7 @@
 package com.esliceu.maze.controllers;
 
 import com.esliceu.maze.model.User;
-import com.esliceu.maze.services.RegisterService;
-import jakarta.servlet.http.HttpSession;
+import com.esliceu.maze.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,7 @@ import org.springframework.ui.Model;
 @Controller
 public class RegisterController {
     @Autowired
-    RegisterService registerService;
+    UserService userService;
     @GetMapping("/register")
     public String getRegister(){
         return "register";
@@ -24,7 +23,7 @@ public class RegisterController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        if(registerService.RegisterUser(user, model)){
+        if(userService.RegisterUser(user, model)){
             return "redirect:/login";
         }
         return "register";

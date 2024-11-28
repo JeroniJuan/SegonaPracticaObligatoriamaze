@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,13 +19,13 @@ public class CoinController {
     @Autowired
     GameService gameService = new GameService();
     @PostMapping("/getCoin")
-    public String postCoin(HttpSession session) {
-        Game currentGame = (Game) session.getAttribute("currentGame");
-
+    public String postCoin(HttpSession session, @RequestParam String timePassed) {
+        int gameID = (int) session.getAttribute("gameID");
+        Game currentGame = gameService.getGame(gameID);
         if (currentGame == null) {
             return "redirect:/start";
         }
-
+        currentGame.setTimePassed(Integer.parseInt(timePassed));
         int currentRoomID = currentGame.getCurrentRoomID();
         Room currentRoom = gameService.getRoom(currentRoomID);
 
@@ -51,8 +50,7 @@ public class CoinController {
                 currentGame.sumCoin();
             }
         }
-
-        session.setAttribute("currentGame", currentGame);
+        gameService.updateGame(currentGame);
         return "redirect:/map";
     }
 }

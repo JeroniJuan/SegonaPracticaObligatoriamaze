@@ -1,12 +1,85 @@
 <!doctype html>
-<html lang="ca">
+<html lang="ca" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/scores.css">
     <title>Scores</title>
 </head>
 <body>
-    <h1>Scores:</h1>
+<h1>Estadístiques de Partides</h1>
 
+<div>
+    <h2>Les teves Partides</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la Partida</th>
+            <th>Player Name</th>
+            <th>Moviments</th>
+            <th>Temps</th>
+            <th>Map ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="record : ${userRecords}">
+            <td th:text="${record.gameName}"></td>
+            <td th:text="${record.playerName}"></td>
+            <td th:text="${record.movements}"></td>
+            <td th:text="${record.time}"></td>
+            <td th:text="${record.mapID}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Top 5 amb Menys Moviments</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la Partida</th>
+            <th>Player Name</th>
+            <th>Moviments</th>
+            <th>Temps</th>
+            <th>Map ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="record : ${top5Movements}">
+            <td th:text="${record.gameName}"></td>
+            <td th:text="${record.playerName}"></td>
+            <td th:text="${record.movements}"></td>
+            <td th:text="${record.time}"></td>
+            <td th:text="${record.mapID}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Top 5 amb Menys Temps</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la Partida</th>
+            <th>Player Name</th>
+            <th>Moviments</th>
+            <th>Temps</th>
+            <th>Map ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="record : ${top5Time}">
+            <td th:text="${record.gameName}"></td>
+            <td th:text="${record.playerName}"></td>
+            <td th:text="${record.movements}"></td>
+            <td th:text="${record.time}"></td>
+            <td th:text="${record.mapID}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
+<footer>Tornar a inici: <a href="/start">Inici</a></footer>
 </html>
