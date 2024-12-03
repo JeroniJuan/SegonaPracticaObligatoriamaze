@@ -1,8 +1,11 @@
 package com.esliceu.maze.model;
 
 import com.esliceu.maze.services.GameService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Game {
+    @Autowired
+    GameService gameService = new GameService();
     int id;
     int userID;
     int mapID;
@@ -15,12 +18,12 @@ public class Game {
     int movesAmount = 0;
     int timePassed = 0; // Temps que ha passat en la partida en segons.
 
-    public void resetGame(GameMap map) {
-        this.currentRoomID = map.startRoomID;
+    public void resetGame() {
+        this.currentRoomID = gameService.getMap(this.mapID).getStartRoomId();
         coinAmount = 0;
-        coinsGrabbed = null;
-        keysGrabbed = null;
-        openedDoors = null;
+        coinsGrabbed = "";
+        keysGrabbed = "";
+        openedDoors = "";
         movesAmount = 0;
         timePassed = 0;
     }

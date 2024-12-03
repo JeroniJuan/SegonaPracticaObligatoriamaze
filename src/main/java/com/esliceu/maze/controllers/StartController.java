@@ -38,11 +38,20 @@ public class StartController {
 
 
     @PostMapping("/start")
-    public String postStart(@RequestParam(required = false) String mapid, @RequestParam(required = false) String gameName, HttpSession session) {
+    public String postStart(@RequestParam(required = false) String mapid,
+                            @RequestParam(required = false) String gameIDStr,
+                            @RequestParam(required = false) String gameNameStr,
+                            HttpSession session) {
         System.out.println("Mapid selected: " + mapid);
-        if (mapid.equals("1") || mapid.equals("2") && !gameName.isEmpty()) {
+        System.out.println("Game name: " + gameNameStr);
+        session.setAttribute("gameID", null);
+        if (mapid != null && !gameNameStr.isEmpty()){
             session.setAttribute("mapid", mapid);
-            session.setAttribute("gameName", gameName);
+            session.setAttribute("gameName", gameNameStr);
+            return "redirect:/map";
+        }else if (gameNameStr != null && gameIDStr != null) {
+            session.setAttribute("gameID", Integer.parseInt(gameIDStr));
+            session.setAttribute("gameName", gameNameStr);
             return "redirect:/map";
         }
         return "start";

@@ -3,7 +3,7 @@ package com.esliceu.maze.model;
 public class GameMap {
     int id;
     String mapName;
-    int startRoomID;
+    int startRoomId;
 
 
     public int getId() {
@@ -22,11 +22,11 @@ public class GameMap {
         this.mapName = mapName;
     }
 
-    public int getStartRoomID() {
-        return startRoomID;
+    public int getStartRoomId() {
+        return startRoomId;
     }
 
-    public void setStartRoomID(int startRoomID) {
-        this.startRoomID = startRoomID;
+    public void setStartRoomId(int startRoomId) {
+        this.startRoomId = startRoomId;
     }
 }

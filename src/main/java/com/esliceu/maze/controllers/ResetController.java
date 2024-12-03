@@ -13,9 +13,9 @@ public class ResetController {
     GameService gameService;
     @GetMapping("/reset")
     public String getReset(HttpSession session){
-        Game currentGame = gameService.getGame(Integer.parseInt((String) session.getAttribute("gameID")));
-        currentGame.resetGame(gameService.getMap(Integer.parseInt((String) session.getAttribute("mapid"))));
-        session.setAttribute("currentGame", currentGame);
+        Game currentGame = gameService.getGame((int) session.getAttribute("gameID"));
+        currentGame.resetGame();
+        gameService.updateGame(currentGame);
         return "redirect:/map";
     }
 }

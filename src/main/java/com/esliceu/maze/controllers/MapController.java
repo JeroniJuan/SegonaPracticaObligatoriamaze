@@ -17,41 +17,33 @@ public class MapController {
     private GameService gameService;
 
     @GetMapping("/map")
-    public String getMap(Model model, HttpSession session, @RequestParam(required = false) String gameIDStr) {
+    public String getMap(Model model, HttpSession session) {
         Game currentGame;
-        GameMap currentMap = new GameMap();
         int gameID = (session.getAttribute("gameID") != null) ? (int) session.getAttribute("gameID") : -1;
-        if (gameIDStr != null){
-            gameID = Integer.parseInt(gameIDStr);
+        GameMap currentMap = new GameMap();
+        String mapid = null;
+        if (gameID != -1){
+            session.setAttribute("mapid", null);
+        }else{
+            mapid = (String) session.getAttribute("mapid");
         }
-        String mapid = (String) session.getAttribute("mapid");
         if (mapid != null){
             currentMap = gameService.getMap(Integer.parseInt(mapid));
         }
         if (gameID == -1){
+            if (mapid == null){
+                return "redirect:/start";
+            }
             String gameName = (String) session.getAttribute("gameName");
             session.setAttribute("gameName", null);
             currentGame = gameService.startGame(currentMap, (String) session.getAttribute("user"), gameName);
             session.setAttribute("gameID", currentGame.getId());
-            System.out.println("CurrentGameID en map: " + currentGame.getId());
         }else {
             currentGame = gameService.getGame(gameID);
         }
-
         int currentRoomId = currentGame.getCurrentRoomID();
 
-        // Info de la partida actual.
-        System.out.println("-----------------------------------------------");
-        System.out.println("Current Room ID:" + currentRoomId);
-        System.out.println("Current Game:" + gameService.getRoom(currentRoomId).getRoomName());
-        System.out.println("Coin Amount:" + currentGame.getCoinAmount());
-        System.out.println("Coins Grabbed:" + currentGame.getCoinsGrabbed());
-        System.out.println("Keys:" + currentGame.getKeysGrabbed());
-        System.out.println("Opened Doors: " + currentGame.getOpenedDoors());
-        System.out.println("-----------------------------------------------");
-
-
-        model.addAttribute("mapid", currentMap.getId());
+        model.addAttribute("mapid", currentGame.getMapID());
         model.addAttribute("currentRoom", currentRoomId);
         model.addAttribute("gameMessage" , session.getAttribute("mapMessage"));
         model.addAttribute("currentRoomName", gameService.getRoom(currentRoomId).getRoomName());
@@ -72,7 +64,6 @@ public class MapController {
         }else{
             model.addAttribute("coin", false);
         }
-
         return "map";
     }
 }

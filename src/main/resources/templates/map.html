@@ -10,12 +10,14 @@
 <body>
 <div>
     <h1>Jugant mapa: <span th:text="${mapid}"></span></h1>
+</div>
+<div>
     <h4 th:text="${gameMessage}"></h4>
 </div>
 <div>
     <p>Habitació actual: <span th:text="${currentRoomName}"></span></p>
     <p>Numero monedes: <span th:text="${coinAmount}"></span></p>
-    <p>Claus que tens: <span th:text="${keysGrabbed}"></span></p>
+    <p>Claus que tens: <span th:text="${keys}"></span></p>
     <a href="/reset">Reiniciar partida.</a>
 </div>
 <div style="display: flex; align-items: center;">
@@ -50,6 +52,7 @@
 
 
 <input type="hidden" id="roomid" name="roomid" th:value="${currentRoom}">
+<input type="hidden" id="mapid" name="mapid" th:value="${mapid}">
 <input type="hidden" id="timePassed" name="timePassed" th:value="${timePassed}">
 <input type="hidden" id="north" name="north" th:value="${north}" th:data-open="${north?.open}">
 <input type="hidden" id="east" name="east" th:value="${east}" th:data-open="${east?.open}">
@@ -59,4 +62,7 @@
 <input type="hidden" id="coin" name="coin" th:value="${coin}">
 
 </body>
+<footer>
+    <p><a href="/start">Retorna a inici.</a></p>
+</footer>
 </html>

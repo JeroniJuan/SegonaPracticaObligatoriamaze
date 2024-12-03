@@ -12,6 +12,7 @@ import java.util.List;
 public class GameDaoImplement implements GameDao{
     @Autowired
     JdbcTemplate jdbcTemplate;
+
     @Override
     public GameMap getMap(int mapid) {
         return jdbcTemplate.queryForObject("select * from gameMap where id=?",

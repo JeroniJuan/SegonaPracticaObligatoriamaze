@@ -4,44 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/scores.css">
+    <script src="/js/scores.js" defer></script>
     <title>Scores</title>
 </head>
 <body>
 <h1>Estadístiques de Partides</h1>
-
 <div>
-    <h2>Les teves Partides</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Nom de la Partida</th>
-            <th>Player Name</th>
-            <th>Moviments</th>
-            <th>Temps</th>
-            <th>Map ID</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="record : ${userRecords}">
-            <td th:text="${record.gameName}"></td>
-            <td th:text="${record.playerName}"></td>
-            <td th:text="${record.movements}"></td>
-            <td th:text="${record.time}"></td>
-            <td th:text="${record.mapID}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <button id="topMovements">Menys moviments</button>
+    <button id="topTime">Menys temps</button>
+    <button id="myGames">Les meves partides</button>
 </div>
-
-<div>
-    <h2>Top 5 amb Menys Moviments</h2>
+<div class="topMovements">
+    <h3>Top 5 partides amb Menys Moviments</h3>
     <table>
         <thead>
         <tr>
             <th>Nom de la Partida</th>
-            <th>Player Name</th>
+            <th>Nom jugador</th>
             <th>Moviments</th>
-            <th>Temps</th>
+            <th>Temps(Segons)</th>
             <th>Map ID</th>
         </tr>
         </thead>
@@ -57,15 +38,15 @@
     </table>
 </div>
 
-<div>
-    <h2>Top 5 amb Menys Temps</h2>
+<div class="topTime">
+    <h3>Top 5 partides amb Menys Temps</h3>
     <table>
         <thead>
         <tr>
             <th>Nom de la Partida</th>
-            <th>Player Name</th>
+            <th>Nom Jugador</th>
             <th>Moviments</th>
-            <th>Temps</th>
+            <th>Temps(Segons)</th>
             <th>Map ID</th>
         </tr>
         </thead>
@@ -80,6 +61,31 @@
         </tbody>
     </table>
 </div>
+<div class="myGames">
+    <h3>Les teves Partides</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la Partida</th>
+            <th>Nom Jugador</th>
+            <th>Moviments</th>
+            <th>Temps(Segons)</th>
+            <th>Map ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="record : ${userRecords}">
+            <td th:text="${record.gameName}"></td>
+            <td th:text="${record.playerName}"></td>
+            <td th:text="${record.movements}"></td>
+            <td th:text="${record.time}"></td>
+            <td th:text="${record.mapID}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
-<footer>Tornar a inici: <a href="/start">Inici</a></footer>
+<footer>
+    Tornar a <a href="/start">Inici</a>
+</footer>
 </html>

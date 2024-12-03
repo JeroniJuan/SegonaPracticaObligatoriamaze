@@ -18,7 +18,7 @@
                 <option value="2">Mapa 2</option>
             </select>
             <label for="gameName">Inserta el nom de la partida.</label>
-            <input type="text" id="gameName" name="gameName" value="">
+            <input type="text" id="gameName" name="gameNameStr" value="">
             <input type="submit" value="Entra">
             <p><a href="/logout">Logout</a></p>
             <p>Ves a els scores: <a href="/scores">Scores</a></p>
@@ -37,8 +37,9 @@
                             <p><strong>Habitació actual:</strong> <span th:text="${game.currentRoomID}"></span></p>
                             <p><strong>Monedes:</strong> <span th:text="${game.coinAmount}"></span></p>
                             <p><strong>Temps jugat:</strong> <span th:text="${game.timePassed}"></span> segons</p>
-                            <form action="/map" method="get">
-                                <input type="hidden" name="gameId" th:value="${game.id}">
+                            <form method="post">
+                                <input type="hidden" name="gameIDStr" th:value="${game.id}">
+                                <input type="hidden" name="gameNameStr" th:value="${game.gameName}">
                                 <button type="submit">Continuar Partida</button>
                             </form>
                         </div>

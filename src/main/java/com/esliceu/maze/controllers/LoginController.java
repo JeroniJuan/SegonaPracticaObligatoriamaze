@@ -12,19 +12,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
     @Autowired
-    UserService loginService;
+    UserService userService;
 
     @GetMapping("/login")
     public String getLogin() {
         return "login";
     }
     @PostMapping("/login")
-    public String postLogin(@RequestParam String username, @RequestParam String password, Model model, HttpSession session){
-        if(loginService.checkUser(username, password, model)){
+    public String postLogin(@RequestParam(required = false) String username, @RequestParam(required = false) String password, Model model, HttpSession session){
+        if (username.isEmpty() || password.isEmpty()) return "login";
+        if(userService.checkUser(username, password, model)){
             session.setAttribute("user", username);
-            model.addAttribute("loginStatus", "Currently logged in: " + username);
             return "redirect:/start";
         };
         return "login";
+    }
+
+    @GetMapping("/")
+    public String getIndex(){
+        return "redirect:/login";
     }
 }

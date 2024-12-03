@@ -2,8 +2,6 @@ package com.esliceu.maze.services;
 
 import com.esliceu.maze.dao.GameDao;
 import com.esliceu.maze.dao.GameDaoImplement;
-import com.esliceu.maze.dao.UserDao;
-import com.esliceu.maze.dao.UserDaoImplement;
 import com.esliceu.maze.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -54,7 +52,7 @@ public class GameService {
     public Game startGame(GameMap map, String user, String gameName) {
         Game game = new Game();
         game.setGameName(gameName);
-        game.setCurrentRoomID(map.getId());
+        game.setCurrentRoomID(map.getStartRoomId());
         game.setMapID(map.getId());
         game.setCoinAmount(0);
         game.setMovesAmount(0);
@@ -88,10 +86,6 @@ public class GameService {
             door = getDoor(getRoom(currentRoomID).getWest(), currentGame);
         }
         return door;
-    }
-
-    public boolean checkKeys(Door door, Game currentGame) {
-        return true;
     }
 
     public boolean canGrabCoin(Game game) {
@@ -147,7 +141,7 @@ public class GameService {
 
 
     public boolean GameisFinished(Game currentGame) {
-        if (currentGame.getCurrentRoomID() == 7) {
+        if (currentGame.getCurrentRoomID() == 7 || currentGame.getCurrentRoomID() == 15) {
             return true;
         }
         return false;

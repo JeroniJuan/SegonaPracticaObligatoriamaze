@@ -1,10 +1,13 @@
 const canvas = document.getElementById('roomCanvas');
 const roomid = document.getElementById('roomid');
+const body = document.body;
 const ctx = canvas.getContext('2d');
 const thickness = 8;
 const margin = 50;
 const roomSize = canvas.width - margin * 2;
 const timePassedInput = document.getElementById('timePassed');
+const inputmapid = document.getElementById('mapid');
+const mapid = inputmapid.value;
 
 function drawWallNorthNormal() {
     drawWallNormal(margin, margin, margin + roomSize, margin);
@@ -239,7 +242,7 @@ function drawKey() {
 
 
 function drawRoom() {
-        if (roomid && roomid.value == 7) {
+        if (roomid && roomid.value == 7 || roomid.value == 15) {
             const playerName = prompt("Por favor, introduce tu nombre de jugador:");
 
             if (playerName) {
@@ -265,6 +268,11 @@ function drawRoom() {
                 alert("Debes ingresar un nombre para continuar.");
             }
             return;
+        }
+        if (mapid === "1") {
+            body.classList.add('background-1');
+        } else if (mapid === "2") {
+            body.classList.add('background-2');
         }
     const coinElement = document.getElementById('coin');
     const keyElement = document.getElementById('key');
@@ -331,5 +339,14 @@ function startTimer(){
         timePassedInput.value = parseInt(timePassedInput.value, 10) + 1;
     }, 1000);
 }
+
+function drawCharacter(){
+    const image = new Image();
+    image.src = '/img/character.png';
+    image.onload = () => {
+        ctx.drawImage(image, 175, 175, 100, 100);
+    };
+}
 drawRoom();
+drawCharacter();
 startTimer();
