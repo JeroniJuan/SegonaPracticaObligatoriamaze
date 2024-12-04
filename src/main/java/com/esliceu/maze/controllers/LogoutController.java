@@ -10,7 +10,6 @@ public class LogoutController {
     public String getLogout(HttpSession session){
         session.setAttribute("user", null);
         session.setAttribute("gameID", null);
-        session.setAttribute("currentGame", null);
         session.setAttribute("mapid", null);
         return "redirect:/login";
     }

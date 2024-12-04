@@ -20,7 +20,7 @@ public class UserService {
         User user = userDao.findByUsername(username);
         if (user != null){
             if (!Utils.toSHA256(password).equals(user.getPassword())){
-                model.addAttribute("loginStatus", "password incorrecta");
+                model.addAttribute("loginStatus", "Password i/o usuari incorrecte");
             }else {
                 model.addAttribute("loginStatus", null);
             }

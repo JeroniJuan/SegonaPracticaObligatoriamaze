@@ -30,20 +30,15 @@ public class StartController {
     public String getStart(HttpSession session, Model model) {
         String user = (String) session.getAttribute("user");
         List<Game> games = gameService.getGamesByUserId(userService.findByUsername(user).getId());
-
         model.addAttribute("games", games);
-
         return "start";
     }
-
 
     @PostMapping("/start")
     public String postStart(@RequestParam(required = false) String mapid,
                             @RequestParam(required = false) String gameIDStr,
                             @RequestParam(required = false) String gameNameStr,
                             HttpSession session) {
-        System.out.println("Mapid selected: " + mapid);
-        System.out.println("Game name: " + gameNameStr);
         session.setAttribute("gameID", null);
         if (mapid != null && !gameNameStr.isEmpty()){
             session.setAttribute("mapid", mapid);
@@ -51,7 +46,7 @@ public class StartController {
             return "redirect:/map";
         }else if (gameNameStr != null && gameIDStr != null) {
             session.setAttribute("gameID", Integer.parseInt(gameIDStr));
-            session.setAttribute("gameName", gameNameStr);
+            session.setAttribute("gameName", null);
             return "redirect:/map";
         }
         return "start";

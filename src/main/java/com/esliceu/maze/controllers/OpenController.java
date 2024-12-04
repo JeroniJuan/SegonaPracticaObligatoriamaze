@@ -25,8 +25,6 @@ public class OpenController {
         int gameID = (int) session.getAttribute("gameID");
         Game currentGame = gameService.getGame(gameID);
 
-        System.out.println("Direcció porta a obrir: " + dir);
-
         if (currentGame == null) {
             return "redirect:/start";
         }
@@ -36,13 +34,11 @@ public class OpenController {
 
         door = gameService.getDoorFromDirection(dir, door, currentRoomID, currentGame);
 
-        if (door == null) {
+        if (door == null || door.getDoorKey().isEmpty()) {
             return "redirect:/map";
         }
 
         if (gameService.hasDoorKey(currentGame, door)) {
-            door.setOpen(true);
-
             String openedDoorsJson = currentGame.getOpenedDoors();
             Set<String> openedDoorsSet = new HashSet<>();
             if (openedDoorsJson != null && !openedDoorsJson.isEmpty()) {
@@ -53,7 +49,7 @@ public class OpenController {
             openedDoorsSet.add(String.valueOf(door.getId()));
             currentGame.setOpenedDoors(new Gson().toJson(openedDoorsSet));
 
-            gameService.updateGame(currentGame);
+            gameService.updateGame(currentGame, (String) session.getAttribute("user"));
         }else{
             session.setAttribute("mapMessage", "No tens la clau necessaria. La clau necesaria es: " + door.getDoorKey());
         }

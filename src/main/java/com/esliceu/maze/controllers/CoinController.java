@@ -50,7 +50,7 @@ public class CoinController {
                 currentGame.sumCoin();
             }
         }
-        gameService.updateGame(currentGame);
+        gameService.updateGame(currentGame, (String) session.getAttribute("user"));
         return "redirect:/map";
     }
 }

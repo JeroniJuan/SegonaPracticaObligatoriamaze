@@ -18,16 +18,6 @@ public class Game {
     int movesAmount = 0;
     int timePassed = 0; // Temps que ha passat en la partida en segons.
 
-    public void resetGame() {
-        this.currentRoomID = gameService.getMap(this.mapID).getStartRoomId();
-        coinAmount = 0;
-        coinsGrabbed = "";
-        keysGrabbed = "";
-        openedDoors = "";
-        movesAmount = 0;
-        timePassed = 0;
-    }
-
     public int getMapID() {
         return mapID;
     }

@@ -23,7 +23,6 @@ public class EndFormController {
             currentGame.setTimePassed(Integer.parseInt(timePassed));
             recordsService.endGame(currentGame, playerName);
             session.setAttribute("gameID", null);
-            session.setAttribute("currentGame", null);
             session.setAttribute("mapid", null);
             return "redirect:/scores";
         };

@@ -29,7 +29,6 @@ public class KeyController {
         currentGame.setTimePassed(Integer.parseInt(timePassed));
         int currentRoomID = currentGame.getCurrentRoomID();
         Room currentRoom = gameService.getRoom(currentRoomID);
-
         String currentRoomKey = currentRoom.getRoomKey();
 
         if (currentRoomKey != null && !currentRoomKey.isEmpty()) {
@@ -56,7 +55,7 @@ public class KeyController {
             }
         }
 
-        gameService.updateGame(currentGame);
+        gameService.updateGame(currentGame, (String) session.getAttribute("user"));
         return "redirect:/map";
     }
 }

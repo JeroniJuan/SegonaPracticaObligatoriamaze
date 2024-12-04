@@ -3,6 +3,7 @@ package com.esliceu.maze.controllers;
 import com.esliceu.maze.model.Game;
 import com.esliceu.maze.model.GameMap;
 import com.esliceu.maze.services.GameService;
+import com.esliceu.maze.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,9 @@ public class MapController {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/map")
     public String getMap(Model model, HttpSession session) {
@@ -40,30 +44,14 @@ public class MapController {
             session.setAttribute("gameID", currentGame.getId());
         }else {
             currentGame = gameService.getGame(gameID);
+            if (currentGame.getUserID() != userService.findByUsername((String) session.getAttribute("user")).getId()){
+                return "redirect:/start"; // Si un usuari esta intentant iniciar una partida que no es seva, no es permet.
+            }
         }
         int currentRoomId = currentGame.getCurrentRoomID();
 
-        model.addAttribute("mapid", currentGame.getMapID());
-        model.addAttribute("currentRoom", currentRoomId);
-        model.addAttribute("gameMessage" , session.getAttribute("mapMessage"));
-        model.addAttribute("currentRoomName", gameService.getRoom(currentRoomId).getRoomName());
-        model.addAttribute("timePassed", currentGame.getTimePassed());
-        model.addAttribute("coinAmount", currentGame.getCoinAmount());
-        model.addAttribute("keys", currentGame.getKeysGrabbed());
-        model.addAttribute("north", gameService.getDoor(gameService.getRoom(currentRoomId).getNorth(), currentGame));
-        model.addAttribute("east", gameService.getDoor(gameService.getRoom(currentRoomId).getEast(), currentGame));
-        model.addAttribute("south", gameService.getDoor(gameService.getRoom(currentRoomId).getSouth(), currentGame));
-        model.addAttribute("west", gameService.getDoor(gameService.getRoom(currentRoomId).getWest(), currentGame));
-        if (gameService.canGrabKey(currentGame)){
-            model.addAttribute("key", gameService.getRoom(currentRoomId).getRoomKey());
-        }else {
-            model.addAttribute("key", null);
-        }
-        if (gameService.canGrabCoin(currentGame)){
-            model.addAttribute("coin", gameService.getRoom(currentRoomId).hasCoin());
-        }else{
-            model.addAttribute("coin", false);
-        }
+        gameService.addAttributesToModel(model, session, currentGame, currentRoomId);
         return "map";
     }
+
 }

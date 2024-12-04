@@ -66,7 +66,7 @@ public class NavController {
             session.setAttribute("mapMessage", "No pots avançar aqui.");
         }
         currentGame.sumMovesAmount();
-        gameService.updateGame(currentGame);
+        gameService.updateGame(currentGame, (String) session.getAttribute("user"));
         return "redirect:/map";
     }
 }

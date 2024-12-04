@@ -5,8 +5,10 @@ import com.esliceu.maze.dao.GameDaoImplement;
 import com.esliceu.maze.model.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.HashSet;
 import java.util.List;
@@ -152,13 +154,48 @@ public class GameService {
     }
 
 
-    public void updateGame(Game currentGame) {
-        gameDao.updateGame(currentGame);
+    public void updateGame(Game currentGame, String user) {
+        if (userService.findByUsername(user).getId() == currentGame.getUserID()){
+            gameDao.updateGame(currentGame);
+        }
     }
 
     public List<Game> getGamesByUserId(int userid) {
         return gameDao.getGamesByUserId(userid);
     }
 
+    public Game resetGame(Game game) {
+        game.setCurrentRoomID(getMap(game.getMapID()).getStartRoomId());
+        game.setCoinAmount(0);
+        game.setCoinsGrabbed("");
+        game.setKeysGrabbed("");
+        game.setOpenedDoors("");
+        game.setMovesAmount(0);
+        game.setTimePassed(0);
+        return game;
+    }
 
+    public void addAttributesToModel(Model model, HttpSession session, Game currentGame, int currentRoomId) {
+        model.addAttribute("mapid", currentGame.getMapID());
+        model.addAttribute("currentRoom", currentRoomId);
+        model.addAttribute("gameMessage" , session.getAttribute("mapMessage"));
+        model.addAttribute("currentRoomName", getRoom(currentRoomId).getRoomName());
+        model.addAttribute("timePassed", currentGame.getTimePassed());
+        model.addAttribute("coinAmount", currentGame.getCoinAmount());
+        model.addAttribute("keys", currentGame.getKeysGrabbed());
+        model.addAttribute("north", getDoor(getRoom(currentRoomId).getNorth(), currentGame));
+        model.addAttribute("east", getDoor(getRoom(currentRoomId).getEast(), currentGame));
+        model.addAttribute("south", getDoor(getRoom(currentRoomId).getSouth(), currentGame));
+        model.addAttribute("west", getDoor(getRoom(currentRoomId).getWest(), currentGame));
+        if (canGrabKey(currentGame)){
+            model.addAttribute("key", getRoom(currentRoomId).getRoomKey());
+        }else {
+            model.addAttribute("key", null);
+        }
+        if (canGrabCoin(currentGame)){
+            model.addAttribute("coin", getRoom(currentRoomId).hasCoin());
+        }else{
+            model.addAttribute("coin", false);
+        }
+    }
 }
