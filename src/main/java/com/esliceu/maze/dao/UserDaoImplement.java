@@ -13,14 +13,6 @@ public class UserDaoImplement implements UserDao{
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Override
-    public User findById(int id) {
-        return jdbcTemplate.queryForObject("select * from user where id=?",
-                new BeanPropertyRowMapper<>(User.class)
-                ,id
-        );
-    }
-
-    @Override
     public User findByUsername(String username) {
         return jdbcTemplate.queryForObject("select * from user where username=?",
                 new BeanPropertyRowMapper<>(User.class)
@@ -32,7 +24,7 @@ public class UserDaoImplement implements UserDao{
                 String.class);
     }
     @Override
-    public void save(User u) {
+    public void saveUser(User u) {
         jdbcTemplate.update("insert into user (username, password) values (?, ?)",
                 u.getUsername(), u.getPassword());
     }

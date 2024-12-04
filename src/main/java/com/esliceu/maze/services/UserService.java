@@ -2,7 +2,6 @@ package com.esliceu.maze.services;
 
 import com.esliceu.maze.dao.UserDao;
 import com.esliceu.maze.dao.UserDaoImplement;
-import com.esliceu.maze.model.Game;
 import com.esliceu.maze.model.User;
 import com.esliceu.maze.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class UserService {
             if (Objects.equals(usernames.get(i), user.getUsername())) return false;
         }
         user.setPassword(Utils.toSHA256(user.getPassword()));   // Encripta en hash la password
-        userDao.save(user);
+        userDao.saveUser(user);
         return true;
     }
 
